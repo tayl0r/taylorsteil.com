@@ -51,6 +51,7 @@ export async function createLetters(scene: THREE.Scene): Promise<LetterMesh[]> {
 			color: BASE_COLOR,
 			roughness: 1,
 			metalness: 0,
+			wireframe: true,
 		});
 
 		const mesh = new THREE.Mesh(geometry, material);
