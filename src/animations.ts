@@ -93,6 +93,7 @@ function randomRotationTarget(): RotationTarget {
 interface CycleState {
 	motionIndices: number[];
 	rotationTargets: RotationTarget[];
+	zOffsets: number[];
 	cycleColor: THREE.Color;
 	letterColors: THREE.Color[];
 	nextCycleColor: THREE.Color;
@@ -121,17 +122,22 @@ function pickUniqueColors(count: number): THREE.Color[] {
 	return colors;
 }
 
+const MAX_Z_OFFSET = 4; // moves letters from Z=0 towards camera at Z=12, ~50% larger at max
+
 function newCycleState(letterCount: number, cycleColor: THREE.Color): CycleState {
 	const motionIndices: number[] = [];
 	const rotationTargets: RotationTarget[] = [];
+	const zOffsets: number[] = [];
 	for (let i = 0; i < letterCount; i++) {
 		motionIndices.push(Math.floor(Math.random() * MOTION_FUNCTIONS.length));
 		rotationTargets.push(randomRotationTarget());
+		zOffsets.push(Math.random() * MAX_Z_OFFSET);
 	}
 
 	return {
 		motionIndices,
 		rotationTargets,
+		zOffsets,
 		cycleColor: cycleColor.clone(),
 		letterColors: pickUniqueColors(letterCount),
 		nextCycleColor: new THREE.Color(pickRandom(TARGET_PALETTE)),
@@ -178,7 +184,7 @@ export function updateLetters(letters: LetterMesh[], timeSec: number): void {
 			letter.mesh.position.set(
 				letter.homePosition.x + offset.x * envelope,
 				letter.homePosition.y + offset.y * envelope,
-				letter.homePosition.z + offset.z * envelope,
+				letter.homePosition.z + offset.z * envelope + cycleState.zOffsets[i] * envelope,
 			);
 
 			// Rotation
