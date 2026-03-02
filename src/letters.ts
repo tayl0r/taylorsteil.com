@@ -5,18 +5,11 @@ import { FontLoader } from "three/addons/loaders/FontLoader.js";
 
 const LETTERS = ["T", "A", "Y", "L", "O", "R"] as const;
 
-// Blue-to-orange gradient: 6 colors
-const COLORS = [
-	0x1a5fb4, // T - deep blue
-	0x1a8a8a, // A - blue-teal
-	0x2aaa6a, // Y - teal
-	0x8a8a1a, // L - teal-orange
-	0xd4781a, // O - orange
-	0xc64600, // R - deep orange
-];
+const BASE_COLOR = 0xff8c00; // orange
 
 export interface LetterMesh {
 	mesh: THREE.Mesh;
+	material: THREE.MeshStandardMaterial;
 	homePosition: THREE.Vector3;
 	index: number;
 }
@@ -55,7 +48,7 @@ export async function createLetters(scene: THREE.Scene): Promise<LetterMesh[]> {
 		}
 
 		const material = new THREE.MeshStandardMaterial({
-			color: COLORS[i],
+			color: BASE_COLOR,
 			roughness: 1,
 			metalness: 0,
 		});
@@ -65,7 +58,7 @@ export async function createLetters(scene: THREE.Scene): Promise<LetterMesh[]> {
 		mesh.position.copy(homePosition);
 
 		scene.add(mesh);
-		letterMeshes.push({ mesh, homePosition: homePosition.clone(), index: i });
+		letterMeshes.push({ mesh, material, homePosition: homePosition.clone(), index: i });
 	}
 
 	return letterMeshes;

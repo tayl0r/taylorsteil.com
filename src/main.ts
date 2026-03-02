@@ -1,4 +1,4 @@
-import { getLetterOffset } from "./animations";
+import { updateLetters } from "./animations";
 import { createLetters, type LetterMesh } from "./letters";
 import { createScene } from "./scene";
 
@@ -15,15 +15,7 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	const timeSec = performance.now() / 1000;
-
-	for (const letter of letters) {
-		const offset = getLetterOffset(letter.index, timeSec);
-		letter.mesh.position.set(
-			letter.homePosition.x + offset.x,
-			letter.homePosition.y + offset.y,
-			letter.homePosition.z + offset.z,
-		);
-	}
+	updateLetters(letters, timeSec);
 
 	renderer.render(scene, camera);
 }
